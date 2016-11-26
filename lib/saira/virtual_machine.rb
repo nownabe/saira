@@ -22,7 +22,7 @@ module Saira
       case opecode
       when :putself
         push main
-      when :putstring
+      when :putstring, :putobject, :duparray
         push operand[0]
       when :send
         call_info = operand[0]
@@ -30,6 +30,8 @@ module Saira
         receiver = pop
         push receiver.send(call_info[:mid], *args)
       when :leave
+      when :pop
+        pop
       end
       $stderr.puts "======== Stack: #{stack}"
     end
