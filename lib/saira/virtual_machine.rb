@@ -1,11 +1,13 @@
 module Saira
   class VirtualMachine
-    attr_reader :iseq, :stack, :main
+    attr_reader :iseq, :stack, :main, :ep
 
     def initialize(iseq)
       @iseq = iseq
       @stack = []
       @main = generate_main
+      iseq.to_a[4][:local_size].times { push nil }
+      @ep = stack.size
     end
 
     def run
@@ -32,8 +34,12 @@ module Saira
       when :leave
       when :pop
         pop
+      when :setlocal
+        stack[ep - operand[0]] = pop
+      when :getlocal
+        push stack[ep - operand[0]]
       end
-      $stderr.puts "======== Stack: #{stack}"
+      print_stack
     end
 
     def pop
@@ -55,6 +61,13 @@ module Saira
         alias inspect to_s
       end
       main
+    end
+
+    def print_stack
+      $stderr.print "======== Stack: "
+      $stderr.print stack[0...ep]
+      $stderr.print " | "
+      $stderr.puts stack[ep..-1].inspect
     end
   end
 end
