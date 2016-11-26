@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require "pp"
+pp RubyVM::InstructionSequence.compile_file(ARGV[0], false).to_a
