@@ -38,6 +38,17 @@ module Saira
         stack[ep - operand[0]] = pop
       when :getlocal
         push stack[ep - operand[0]]
+      when :putnil
+        push nil
+      when :newarray
+        push Array.new(operand[0]) { pop }.reverse
+      when :getconstant
+        klass = pop
+        if klass.nil?
+          push Module.const_get(operand[0])
+        else
+          push klass.const_get(operand[0])
+        end
       end
       print_stack
     end
