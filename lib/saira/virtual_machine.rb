@@ -49,6 +49,10 @@ module Saira
         else
           push klass.const_get(operand[0])
         end
+      when :tostring
+        push pop.to_s
+      when :concatstrings
+        push Array.new(operand[0]) { pop }.reverse.join
       end
       print_stack
     end
